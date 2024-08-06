@@ -11,6 +11,7 @@ import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRep
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 
 @Configuration
 @EnableDynamoDBRepositories(basePackages = "br.com.fiap.techchallenge")
@@ -29,15 +30,14 @@ public class DynamoDBConfig {
     @Value("${aws.secretKey}")
     private final String secretKey;
 
-    @Value("${aws.sessionToken}")
-    private final String sessionToken;
-
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {
-        final BasicSessionCredentials sessionCredentials = new BasicSessionCredentials(accessKey, secretKey, sessionToken);
+
+        BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
+
 
         return AmazonDynamoDBClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(sessionCredentials))
+                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, region))
                 .build();
     }

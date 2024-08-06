@@ -11,6 +11,7 @@ public class OrderToOrderResponse {
         return OrderResponse
                 .builder()
                 .orderId(order.getOrderId())
+                .customerId(order.getCustomerId())
                 .deliveryStatus(order.getDeliveryStatus().getStatus().toString())
                 .created(order.getCreated())
                 .build();
